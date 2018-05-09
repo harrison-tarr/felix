@@ -313,5 +313,24 @@ public class ConfigurationHandlerTest {
         Assert.assertEquals(1, dictionary.size());
         Assert.assertEquals(true , dictionary.get(SERVICE_PID));
     }
+
+    @Test
+    public void test_readFilePath() throws IOException {
+        String entry = "fileRoot=\"\\\\127.0.0.1\\some\\file\\path\\\"";
+        InputStream stream = new ByteArrayInputStream(entry.getBytes(StandardCharsets.UTF_8));
+        Dictionary dictionary = ConfigurationHandler.read(stream);
+        Assert.assertEquals("\\\\127.0.0.1\\some\\file\\path\\", dictionary.get("fileRoot"));
+
+    }
+
+    @Test
+    public void test_writeFilePath() throws IOException {
+        OutputStream out = new ByteArrayOutputStream();
+        Dictionary< String, String> properties = new Hashtable< String, String>();
+        properties.put("fileRoot", "\\\\127.0.0.1\\some\\file\\path\\");
+        ConfigurationHandler.write(out, properties);
+        String entry = new String(((ByteArrayOutputStream)out).toByteArray(),"UTF-8");
+        Assert.assertEquals("fileRoot=\"\\\\\\\\127.0.0.1\\\\some\\\\file\\\\path\\\\\"\r\n", entry);
+    }
 }
   
