@@ -332,5 +332,20 @@ public class ConfigurationHandlerTest {
         String entry = new String(((ByteArrayOutputStream)out).toByteArray(),"UTF-8");
         Assert.assertEquals("fileRoot=\"\\\\\\\\127.0.0.1\\\\some\\\\file\\\\path\\\\\"\r\n", entry);
     }
+
+    @Test
+    public void test_readFilePath2() throws IOException {
+        String entry = "fileRoot=\"\\\\\\\\127.0.0.1\\\\some\\\\file\\\\path\\\\\"\r\n";
+        InputStream stream = new ByteArrayInputStream(entry.getBytes(StandardCharsets.UTF_8));
+        Dictionary dictionary = ConfigurationHandler.read(stream);
+        Assert.assertEquals("\\\\127.0.0.1\\some\\file\\path\\", dictionary.get("fileRoot"));
+        String output = (String) dictionary.get("fileRoot");
+        OutputStream out = new ByteArrayOutputStream();
+        ConfigurationHandler.write(out, dictionary);
+        entry = new String(((ByteArrayOutputStream)out).toByteArray(),"UTF-8");
+        Assert.assertEquals("fileRoot=\"\\\\\\\\127.0.0.1\\\\some\\\\file\\\\path\\\\\"\r\n", entry);
+
+
+    }
 }
   
